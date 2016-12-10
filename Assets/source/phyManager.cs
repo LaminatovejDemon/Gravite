@@ -8,8 +8,13 @@ public class phyManager : MonoBehaviour {
 	public static phyManager manager {
 		get {
 			if (_instance == null) {
-				_instance = new GameObject().AddComponent<phyManager>();
-				_instance.gameObject.name = "phyManager";
+				phyManager[] managers_ = GameObject.FindObjectsOfType<phyManager> ();
+				if (managers_.Length > 0) {
+					_instance = managers_ [0];
+				} else if (_instance == null) {
+					_instance = new GameObject().AddComponent<phyManager>();
+					_instance.gameObject.name = "phyManager";	
+				}	
 			}
 			return _instance;
 		}
@@ -31,11 +36,4 @@ public class phyManager : MonoBehaviour {
 		}
 	}
 
-	void Update(){
-	/*	string log_ = "Objects: ";
-		for (int i = 0; i < _objects.Count; ++i) {
-			log_ += _objects [i] + ", ";
-		}
-		Debug.Log (log_);*/
-	}
 }
