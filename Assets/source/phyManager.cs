@@ -2,32 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class phyManager : MonoBehaviour {
+public class phyManager : manager<phyManager> {
+	
 	List<phyObject> _objects;
-	private static phyManager _instance;
-	public static phyManager manager {
-		get {
-			if (_instance == null) {
-				phyManager[] managers_ = GameObject.FindObjectsOfType<phyManager> ();
-				if (managers_.Length > 0) {
-					_instance = managers_ [0];
-				} else if (_instance == null) {
-					_instance = new GameObject().AddComponent<phyManager>();
-					_instance.gameObject.name = "phyManager";	
-				}	
-			}
-			return _instance;
-		}
-	}
+	public int Speed = 10;
 
 	public void SpreadGravity(phyObject source){
-		if (_objects == null) {
-			_objects = new List<phyObject> ();
-		}
-		if (!_objects.Contains (source)) {
-			_objects.Add (source);
-		}
-
+		
 		for (int i = 0; i < _objects.Count; ++i) {
 			if (source == _objects [i]) {
 				continue;
@@ -36,4 +17,22 @@ public class phyManager : MonoBehaviour {
 		}
 	}
 
+	public void Initialise(phyObject source){
+		if (_objects == null) {
+			_objects = new List<phyObject> ();
+		}
+		if (!_objects.Contains (source)) {
+			_objects.Add (source);
+		}
+	}
+
+	void Update(){
+		for (int i = 0; i < Speed; ++i) {
+			timeManager.get.Tick();
+			for ( int j = 0; j < _objects.Count; ++j){
+				SpreadGravity (_objects[j]);		
+				_objects [j].Cycle ();
+			}
+		}
+	}
 }
