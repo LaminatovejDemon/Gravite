@@ -26,28 +26,23 @@ public class ufo : MonoBehaviour
             pressed = true;
             
 
-           Vector3 whereclicked = Camera.main.ScreenToWorldPoint(Input.mousePosition) / Camera.main.orthographicSize;
-           whereclicked.x = whereclicked.x / Camera.main.aspect;
-            whereclicked.y = whereclicked.z;
-            //PICO NEVIM PROC ALE TY OSY JSOU ZMMMMRRRRDDDLLYYY
-
+            Vector3 whereclicked = Camera.main.ScreenToWorldPoint(Input.mousePosition) / Camera.main.orthographicSize;
+            whereclicked.x = whereclicked.x / Camera.main.aspect;
+          
+                       
             Vector3 ufoposition = this.transform.position;
             ufoposition = Camera.main.WorldToViewportPoint(ufoposition);
-
+            
+            
             ufoposition.x = ufoposition.x * 2 - 1;
-            ufoposition.y = ufoposition.y * 2 - 1;
-            ufoposition.z = ufoposition.z * 2 - 1;
+            ufoposition.z = ufoposition.y * 2 - 1;
+            ufoposition.y = 0;
 
-
-         
-
+            
             Vector3 forcetoufo = whereclicked - ufoposition;
 
-            this.GetComponent<Rigidbody>().AddForce(forcetoufo * 20 * (Time.time - startime));
-
-            //A STEJNE TA PICA JEDE FURT NAHORU KURVA FIX VOLE
-
-
+            this.GetComponent<Rigidbody>().AddForce(forcetoufo * 50 * (Time.time - startime));
+            
 
         }
 
