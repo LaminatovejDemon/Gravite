@@ -16,6 +16,7 @@ public class asteroidManager : manager<asteroidManager> {
 
 	public void Unregister(asteroid source){
 		--_asteroidCount;
+		template_ = source;
 		CheckCount ();
 	}
 
