@@ -10,6 +10,7 @@ public class ufo : MonoBehaviour
 	public trail _trail;
 	public healthBar _health;
 	float _deathTimer;
+	public score _score;
 
 	Vector3 _touchDirection = Vector3.zero;
 
@@ -63,11 +64,16 @@ public class ufo : MonoBehaviour
 			UpdateDeath ();
 			return;
 		}
+		UpdateScore ();
 
 		CatchMouse ();	
 		UpdateControls ();
 		DrawForce ();
     }
+
+	void UpdateScore(){
+		_score.Add (GetComponent<Rigidbody> ().velocity.magnitude * 0.01f);
+	}
 		
 	void CatchMouse(){
 		if (Input.GetMouseButton (0)) {
