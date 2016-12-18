@@ -6,6 +6,7 @@ public class ufo : MonoBehaviour
 {
     bool pressed = false;
     float startime;
+	public trail _trail;
 
 	Vector3 _touchDirection = Vector3.zero;
 
@@ -29,6 +30,8 @@ public class ufo : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+		_trail.UpdateTrail ();
+
 		Vector3 accumulate_ = Vector3.zero;
 
 		if (Input.GetMouseButton (0)) {
@@ -57,6 +60,7 @@ public class ufo : MonoBehaviour
 		this.GetComponent<Rigidbody>().AddForce(_touchDirection * Time.deltaTime * 200.0f);
 
 		DrawForce ();
+
     }
 }
 

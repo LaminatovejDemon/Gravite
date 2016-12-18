@@ -7,24 +7,24 @@ public class phyObject : MonoBehaviour {
 	public float SelfRotation = 0.0f;
 	public float Mass = 1.0f;
 
-
 	// Sun: 1.989 * 10^30 ~ 1989000
 	// Moon: 7.345 * 10^22 ~ 0.07345
 	// Earth: 5.972 * 10^24 ~ 5.972
 
 	float _resultRotation = 0;
 	Vector3 _resultForces = Vector3.zero;
-	List<Vector3> _positions;
+
 
 	Vector3 _gravityForce = Vector3.zero;
 	Vector3 _inertiaForce = Vector3.zero;
 
 	public void Start(){
 		phyManager.get.Initialise (this);
+		gameObject.AddComponent<trail> ();
 	}
 
 	public void Cycle() {
-		UpdateTrail ();
+		GetComponent<trail>().UpdateTrail();
 
 		this.transform.position += _resultForces * timeManager.get.deltaTime * 3.0f;
 		this.transform.Rotate (Vector3.up, _resultRotation * timeManager.get.deltaTime);
@@ -56,32 +56,5 @@ public class phyObject : MonoBehaviour {
 		Gizmos.DrawLine (pos_, pos_ + (_resultForces * 10f));*/
 	}
 
-	void UpdateTrail(){
-		LineRenderer line_ = GetComponent<LineRenderer> ();
-		if (_positions == null) {
-			_positions = new List<Vector3>();
-		}
-		if ( line_ == null) {
-			line_ = gameObject.AddComponent<LineRenderer> ();
-		}
 
-		if (_positions.Count > 1 && (_positions [_positions.Count - 2] - transform.position).magnitude < 3.0f) {
-			_positions [_positions.Count - 1] = transform.position;
-		} else {
-			_positions.Add (transform.position);
-			if (_positions.Count > 100) {
-				_positions.RemoveAt (0);
-			}
-		}
-
-		while (_positions.Count > 10 && (_positions [0] - transform.position).magnitude < 7.0f) {
-			_positions.RemoveAt(0);
-		}
-
-		if (line_.numPositions != _positions.Count) {
-			line_.numPositions = _positions.Count;
-		}
-
-		line_.SetPositions (_positions.ToArray());
-	}
 }
