@@ -16,6 +16,16 @@ public class ufo : MonoBehaviour
 		Gizmos.DrawLine (transform.position, transform.position + (_touchDirection.normalized * 50f));
     }
 
+	void HideForce(){
+		gameObject.GetComponent<LineRenderer> ().enabled = false;
+	}
+
+	void DrawForce(){
+		gameObject.GetComponent<LineRenderer> ().enabled = true;
+		gameObject.GetComponent<LineRenderer> ().SetPosition (0, transform.position);
+		gameObject.GetComponent<LineRenderer> ().SetPosition (1, transform.position + _touchDirection);
+	}
+
     // Update is called once per frame
     void Update()
     {
@@ -37,53 +47,17 @@ public class ufo : MonoBehaviour
 			accumulate_ /= Input.touchCount;
 		}
 		else {
+			HideForce ();
 			return;
 		}
 
 		Vector3 inputWorld_ = Camera.main.ScreenToWorldPoint (accumulate_);
-		_touchDirection = inputWorld_ - transform.position;
-		this.GetComponent<Rigidbody>().AddForce(_touchDirection * 10.0f);
+		_touchDirection = (inputWorld_ - transform.position);
 
+		this.GetComponent<Rigidbody>().AddForce(_touchDirection * Time.deltaTime * 200.0f);
 
-        /*if (Input.GetMouseButton(0))
-        {
-            if (!pressed)
-                {
-                    startime = Time.time;
-                }
-            pressed = true;
-            
-
-            Vector3 whereclicked = Camera.main.ScreenToWorldPoint(Input.mousePosition) / Camera.main.orthographicSize;
-            whereclicked.x = whereclicked.x / Camera.main.aspect;
-          
-                       
-            Vector3 ufoposition = this.transform.position;
-            ufoposition = Camera.main.WorldToViewportPoint(ufoposition);
-            
-            
-            ufoposition.x = ufoposition.x * 2 - 1;
-            ufoposition.z = ufoposition.y * 2 - 1;
-            ufoposition.y = 0;
-
-            
-            Vector3 forcetoufo = whereclicked - ufoposition;
-
-            this.GetComponent<Rigidbody>().AddForce(forcetoufo * 250);
-
-            // * (Time.time - startime)
-
-
-        }
-
-        if  (Input.GetMouseButtonUp(0))
-        {
-            pressed = false;
-        }
-*/
-
+		DrawForce ();
     }
-
 }
 
 
