@@ -41,8 +41,10 @@ public class ufo : MonoBehaviour
             
             Vector3 forcetoufo = whereclicked - ufoposition;
 
-            this.GetComponent<Rigidbody>().AddForce(forcetoufo * 50 * (Time.time - startime));
-            
+            this.GetComponent<Rigidbody>().AddForce(forcetoufo * 250);
+
+            // * (Time.time - startime)
+
 
         }
 
