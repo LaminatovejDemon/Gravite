@@ -68,7 +68,7 @@ public class ufo : MonoBehaviour
 
 		CatchMouse ();	
 		UpdateControls ();
-		DrawForce ();
+
     }
 
 	void UpdateScore(){
@@ -85,6 +85,11 @@ public class ufo : MonoBehaviour
 	}
 
 	void UpdateControls(){
+//		ApplyForceControllerAlpha();
+		ApplyForceControllerBeta();
+	}
+
+	void ApplyForceControllerAlpha(){
 		Vector3 accumulate_ = Vector3.zero;
 
 		if (pressed) {
@@ -103,7 +108,43 @@ public class ufo : MonoBehaviour
 		Vector3 inputWorld_ = Camera.main.ScreenToWorldPoint (accumulate_);
 		_touchDirection = (inputWorld_ - transform.position);
 
-		this.GetComponent<Rigidbody>().AddForce(_touchDirection * Time.deltaTime * 200.0f);
+		this.GetComponent<Rigidbody> ().AddForce (_touchDirection * Time.deltaTime * 200.0f);
+		DrawForce ();
+	}
+
+	float angle_ = 0;
+	void ApplyForceControllerBeta(){
+		
+		Vector3 accumulate_ = Vector3.zero;
+
+		if (Input.touchCount > 0 ){
+			for (int i = 0; i < Input.touchCount; ++i) {
+				accumulate_ += new Vector3 (Input.GetTouch (i).position.x, 0, Input.GetTouch(i).position.y);
+			}
+			accumulate_ /= Input.touchCount;
+
+			Vector3 inputWorld_ = Camera.main.ScreenToWorldPoint (accumulate_);
+			_touchDirection = (inputWorld_ - transform.position);
+		}
+
+		Vector3 touchPosition_ = Input.touchCount > 0 ? new Vector3(Input.GetTouch(0).position.x, 0, Input.GetTouch(0).position.y) : Vector3.zero;
+
+		if (Input.touchCount == 1 ) {
+			Vector3 viewportTouch_ = Camera.main.ScreenToViewportPoint (touchPosition_);
+			angle_ += 900.0f * Time.deltaTime * (viewportTouch_.x - 0.5f);
+		} else if ( Input.touchCount > 1 ) {
+			_touchDirection = Quaternion.AngleAxis (angle_, Vector3.up) * Vector3.forward * _touchDirection.magnitude;
+			this.GetComponent<Rigidbody> ().drag = 0.2f;
+			this.GetComponent<Rigidbody> ().AddForce (_touchDirection * Time.deltaTime * 50.0f);
+		}
+
+		gameObject.GetComponent<LineRenderer> ().endColor = new Color (1, 1, 1, 1);
+
+		Vector3 from_ = transform.position;
+		Vector3 to_ = transform.position + (Quaternion.AngleAxis (angle_, Vector3.up) * Vector3.forward * (Input.touchCount > 1 ? 20.0f : 12.0f));
+		Debug.Log ("Line from " + from_ + " to " + to_);
+		gameObject.GetComponent<LineRenderer> ().SetPosition (0, from_);
+		gameObject.GetComponent<LineRenderer> ().SetPosition (1, to_);
 	}
 }
 
